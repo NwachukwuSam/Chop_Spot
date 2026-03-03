@@ -3,5 +3,8 @@ FROM quay.io/keycloak/keycloak:23.0
 # Copy startup script to a writable location
 COPY --chmod=755 start-keycloak.sh /opt/keycloak/bin/start-keycloak.sh
 
+# Build Keycloak with the database configuration
+RUN /opt/keycloak/bin/kc.sh build --db=postgres
+
 # Use the script as entrypoint
 ENTRYPOINT ["/opt/keycloak/bin/start-keycloak.sh"]
