@@ -39,9 +39,9 @@ services:
   # Eureka Service Discovery
   - type: web
     name: delichops-eureka
-    env: java
-    buildCommand: cd eureka-server && mvn clean package -DskipTests
-    startCommand: java -jar eureka-server/target/eureka-server-1.0.0.jar
+    env: docker
+    dockerfilePath: ./eureka-server/Dockerfile
+    dockerContext: ./eureka-server
     plan: free
     envVars:
       - key: PORT
@@ -50,9 +50,9 @@ services:
   # Auth Service
   - type: web
     name: delichops-auth
-    env: java
-    buildCommand: cd auth-service && mvn clean package -DskipTests
-    startCommand: java -jar auth-service/target/auth-service-1.0.0.jar
+    env: docker
+    dockerfilePath: ./auth-service/Dockerfile
+    dockerContext: ./auth-service
     plan: free
     envVars:
       - key: PORT
@@ -78,9 +78,9 @@ services:
   # User Service
   - type: web
     name: delichops-user
-    env: java
-    buildCommand: cd user-service && mvn clean package -DskipTests
-    startCommand: java -jar user-service/target/user-service-1.0.0.jar
+    env: docker
+    dockerfilePath: ./user-service/Dockerfile
+    dockerContext: ./user-service
     plan: free
     envVars:
       - key: PORT
@@ -97,9 +97,9 @@ services:
   # API Gateway (Main Entry Point)
   - type: web
     name: delichops-gateway
-    env: java
-    buildCommand: cd api-gateway && mvn clean package -DskipTests
-    startCommand: java -jar api-gateway/target/api-gateway-1.0.0.jar
+    env: docker
+    dockerfilePath: ./api-gateway/Dockerfile
+    dockerContext: ./api-gateway
     plan: free
     envVars:
       - key: PORT
