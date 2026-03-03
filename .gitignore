@@ -1,0 +1,58 @@
+# .gitignore
+
+# Compiled class files
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.settings/
+.classpath
+.project
+.factorypath
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Backups
+backups/
+*.sql
+*.sql.gz
+
+# AWS & Secrets
+.aws/
+*.pem
+*.key
+*.crt
+secrets/
+
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Node (if you add frontend later)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Documentation (keep locally, don't push)
+*.md
+docs/
+*.sh

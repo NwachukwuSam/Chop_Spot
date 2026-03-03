@@ -1,0 +1,28 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: user-service
+  
+  data:
+    mongodb:
+      uri: mongodb+srv://sales_book_db:jcjvfsDtGkwoM8z3@salesbook.nkan5iy.mongodb.net/delichops_db?retryWrites=true&w=majority
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/delichops
+          jwk-set-uri: http://localhost:9090/realms/delichops/protocol/openid-connect/certs
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG

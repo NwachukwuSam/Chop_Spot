@@ -1,0 +1,27 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/delichops
+          jwk-set-uri: http://localhost:9090/realms/delichops/protocol/openid-connect/certs
+
+keycloak:
+  server-url: http://localhost:9090
+  realm: delichops
+  client-id: delichops-backend
+  client-secret: WG3rnfzvmNAHKpjF3K0JvKoWwKbyz3wk
+  admin-username: admin
+  admin-password: admin
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
