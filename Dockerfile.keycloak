@@ -1,8 +1,7 @@
 FROM quay.io/keycloak/keycloak:23.0
 
-# Copy startup script
-COPY start-keycloak.sh /opt/start-keycloak.sh
-RUN chmod +x /opt/start-keycloak.sh
+# Copy startup script to a writable location
+COPY --chmod=755 start-keycloak.sh /opt/keycloak/bin/start-keycloak.sh
 
 # Use the script as entrypoint
-ENTRYPOINT ["/opt/start-keycloak.sh"]
+ENTRYPOINT ["/opt/keycloak/bin/start-keycloak.sh"]
