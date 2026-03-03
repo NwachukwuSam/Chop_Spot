@@ -16,7 +16,7 @@ services:
   - type: web
     name: delichops-keycloak
     env: docker
-    dockerfilePath: Dockerfile.keycloak
+    dockerfilePath: /Dockerfile.keycloak
     plan: free
     envVars:
       - key: KC_DB
