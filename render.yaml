@@ -17,7 +17,6 @@ services:
     name: delichops-keycloak
     env: docker
     dockerfilePath: /Dockerfile.keycloak
-    dockerCommand: /bin/sh -c "exec /opt/keycloak/bin/kc.sh start --http-port=${PORT:-8080} --hostname-strict=false --proxy=edge"
     plan: free
     envVars:
       - key: KC_DB
