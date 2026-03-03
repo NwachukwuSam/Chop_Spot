@@ -57,3 +57,4 @@ application-local.yml
 application-prod.yml
 *-credentials.yml
 *.md
+./
