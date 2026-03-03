@@ -1,7 +1,4 @@
-# Render Blueprint for Delichops
-# This file can be used to deploy all services at once
-# Visit: https://dashboard.render.com/select-repo
-
+# Simplified Render Blueprint - Monolithic Architecture
 services:
   # PostgreSQL Database for Keycloak
   - type: pserv
@@ -16,7 +13,7 @@ services:
   - type: web
     name: delichops-keycloak
     env: docker
-    dockerfilePath: /Dockerfile.keycloak
+    dockerfilePath: ./Dockerfile.keycloak
     dockerCommand: /opt/keycloak/bin/start-keycloak.sh
     plan: free
     envVars:
@@ -26,6 +23,8 @@ services:
         fromDatabase:
           name: delichops-postgres
           property: connectionString
+      - key: KC_DB_USERNAME
+        value: keycloak
       - key: KEYCLOAK_ADMIN
         value: admin
       - key: KEYCLOAK_ADMIN_PASSWORD
@@ -36,77 +35,42 @@ services:
         value: edge
     healthCheckPath: /health/ready
 
-  # Eureka Service Discovery
+  # Delichops Backend (Single Monolithic Application)
   - type: web
-    name: delichops-eureka
+    name: delichops-backend
     env: docker
-    dockerfilePath: ./eureka-server/Dockerfile
-    dockerContext: ./eureka-server
+    dockerfilePath: ./delichops-backend/Dockerfile
+    dockerContext: ./delichops-backend
     plan: free
     envVars:
       - key: PORT
-        value: 8761
-
-  # Auth Service
-  - type: web
-    name: delichops-auth
-    env: docker
-    dockerfilePath: ./auth-service/Dockerfile
-    dockerContext: ./auth-service
-    plan: free
-    envVars:
-      - key: PORT
-        value: 8081
+        value: 8080
+      - key: MONGODB_URI
+        value: mongodb+srv://sales_book_db:jcjvfsDtGkwoM8z3@salesbook.nkan5iy.mongodb.net/delichops_db?retryWrites=true&w=majority
       - key: KEYCLOAK_SERVER_URL
         fromService:
           name: delichops-keycloak
           type: web
           property: host
+      - key: KEYCLOAK_ISSUER_URI
+        fromService:
+          name: delichops-keycloak
+          type: web
+          property: host
+        value: /realms/delichops
+      - key: KEYCLOAK_JWK_SET_URI
+        fromService:
+          name: delichops-keycloak
+          type: web
+          property: host
+        value: /realms/delichops/protocol/openid-connect/certs
       - key: KEYCLOAK_REALM
         value: delichops
       - key: KEYCLOAK_CLIENT_ID
         value: delichops-backend
       - key: KEYCLOAK_CLIENT_SECRET
-        sync: false  # Set this manually after Keycloak setup
-      - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
-        fromService:
-          name: delichops-eureka
-          type: web
-          property: host
-        value: /eureka/
-
-  # User Service
-  - type: web
-    name: delichops-user
-    env: docker
-    dockerfilePath: ./user-service/Dockerfile
-    dockerContext: ./user-service
-    plan: free
-    envVars:
-      - key: PORT
-        value: 8082
-      - key: SPRING_DATA_MONGODB_URI
-        value: mongodb+srv://sales_book_db:jcjvfsDtGkwoM8z3@salesbook.nkan5iy.mongodb.net/delichops_db?retryWrites=true&w=majority
-      - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
-        fromService:
-          name: delichops-eureka
-          type: web
-          property: host
-        value: /eureka/
-
-  # API Gateway (Main Entry Point)
-  - type: web
-    name: delichops-gateway
-    env: docker
-    dockerfilePath: ./api-gateway/Dockerfile
-    dockerContext: ./api-gateway
-    plan: free
-    envVars:
-      - key: PORT
-        value: 8080
-      - key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
-        fromService:
-          name: delichops-eureka
-          type: web
-          property: host
-        value: /eureka/
+        sync: false  # Set manually after Keycloak setup
+      - key: KEYCLOAK_ADMIN_USERNAME
+        value: admin
+      - key: KEYCLOAK_ADMIN_PASSWORD
+        value: admin
