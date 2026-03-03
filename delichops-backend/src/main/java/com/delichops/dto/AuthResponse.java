@@ -1,0 +1,27 @@
+package com.delichops.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthResponse {
+    private String accessToken;
+    private String refreshToken;
+    private Integer expiresIn;
+    private String tokenType;
+    
+    // User information for frontend
+    private String userId;
+    private String username;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private List<String> roles;
+}

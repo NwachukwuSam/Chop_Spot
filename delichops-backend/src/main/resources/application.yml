@@ -1,0 +1,31 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: delichops-backend
+  
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/delichops}
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/delichops}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/delichops/protocol/openid-connect/certs}
+
+keycloak:
+  server-url: ${KEYCLOAK_SERVER_URL:http://localhost:8180}
+  realm: ${KEYCLOAK_REALM:delichops}
+  client-id: ${KEYCLOAK_CLIENT_ID:delichops-backend}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  admin:
+    username: ${KEYCLOAK_ADMIN_USERNAME:admin}
+    password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
+
+logging:
+  level:
+    com.delichops: DEBUG
+    org.springframework.security: DEBUG
