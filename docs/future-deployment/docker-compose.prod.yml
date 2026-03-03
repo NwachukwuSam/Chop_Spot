@@ -1,0 +1,142 @@
+version: '3.8'
+
+# Production Docker Compose
+# This assumes Keycloak uses AWS RDS PostgreSQL
+
+services:
+  eureka-server:
+    build: ./eureka-server
+    container_name: delichops-eureka
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - "8761:8761"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - delichops-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: delichops-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_URL=http://eureka-server:8761
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - delichops-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  auth-service:
+    build: ./auth-service
+    container_name: delichops-auth
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_URL=http://eureka-server:8761
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
+      - KEYCLOAK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+    ports:
+      - "8081:8081"
+    depends_on:
+      - eureka-server
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - delichops-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  user-service:
+    build: ./user-service
+    container_name: delichops-user
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA_URL=http://eureka-server:8761
+      - KEYCLOAK_URL=${KEYCLOAK_URL}
+      - MONGODB_URI=${MONGODB_URI}
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-server
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - delichops-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Keycloak with external PostgreSQL (AWS RDS)
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: delichops-keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: ${POSTGRES_URL}
+      KC_DB_USERNAME: ${POSTGRES_USERNAME}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USERNAME}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME}
+      KC_PROXY: edge
+      KC_HTTP_ENABLED: true
+    ports:
+      - "9090:8080"
+    command:
+      - start
+      - --optimized
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - delichops-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  delichops-network:
+    driver: bridge

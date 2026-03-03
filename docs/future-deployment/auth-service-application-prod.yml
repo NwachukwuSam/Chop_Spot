@@ -1,0 +1,52 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Production Keycloak URL (replace with your domain)
+          issuer-uri: ${KEYCLOAK_URL:https://auth.delichops.com}/realms/delichops
+          jwk-set-uri: ${KEYCLOAK_URL:https://auth.delichops.com}/realms/delichops/protocol/openid-connect/certs
+
+keycloak:
+  # Production Keycloak URL
+  server-url: ${KEYCLOAK_URL:https://auth.delichops.com}
+  realm: delichops
+  client-id: delichops-backend
+  # Use environment variable for security
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  admin-username: ${KEYCLOAK_ADMIN_USERNAME:admin}
+  admin-password: ${KEYCLOAK_ADMIN_PASSWORD}
+
+eureka:
+  client:
+    service-url:
+      # Use AWS internal DNS or service discovery
+      defaultZone: ${EUREKA_URL:http://eureka-server:8761}/eureka/
+  instance:
+    prefer-ip-address: false
+    hostname: ${HOSTNAME:auth-service}
+
+logging:
+  level:
+    root: INFO
+    com.delichops: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    name: /var/log/delichops/auth-service.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
