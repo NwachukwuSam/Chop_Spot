@@ -1,4 +1,5 @@
 FROM quay.io/keycloak/keycloak:23.0
 
 # Keycloak will use the PORT environment variable from Render
-CMD ["start", "--http-port=${PORT:-8080}", "--hostname-strict=false", "--proxy=edge"]
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["exec /opt/keycloak/bin/kc.sh start --http-port=${PORT:-8080} --hostname-strict=false --proxy=edge"]
