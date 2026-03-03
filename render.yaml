@@ -17,6 +17,7 @@ services:
     name: delichops-keycloak
     env: docker
     dockerfilePath: /Dockerfile.keycloak
+    dockerCommand: /opt/keycloak/bin/start-keycloak.sh
     plan: free
     envVars:
       - key: KC_DB
