@@ -1,12 +1,12 @@
 # Simplified Render Blueprint - Monolithic Architecture
-services:
+databases:
   # PostgreSQL Database for Keycloak
-  - type: pserv
-    name: delichops-postgres
+  - name: delichops-postgres
     plan: free
-    ipAllowList: []
+    databaseName: keycloak
+    user: keycloak
 
-  # Keycloak Authentication Server
+services:
   - type: web
     name: delichops-keycloak
     env: docker
