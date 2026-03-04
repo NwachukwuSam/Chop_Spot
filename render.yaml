@@ -19,7 +19,7 @@ services:
       - key: KC_DB_URL
         fromDatabase:
           name: delichops-postgres
-          property: connectionString
+          property: jdbcUrl
       - key: KC_DB_USERNAME
         fromDatabase:
           name: delichops-postgres
