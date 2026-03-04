@@ -4,8 +4,6 @@ services:
   - type: pserv
     name: delichops-postgres
     plan: free
-    databaseName: keycloak
-    databaseUser: keycloak
 
   # Keycloak Authentication Server
   - type: web
