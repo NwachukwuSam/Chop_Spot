@@ -4,6 +4,7 @@ services:
   - type: pserv
     name: delichops-postgres
     plan: free
+    ipAllowList: []
 
   # Keycloak Authentication Server
   - type: web
