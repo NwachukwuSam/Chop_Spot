@@ -3,18 +3,16 @@ services:
   # PostgreSQL Database for Keycloak
   - type: pserv
     name: delichops-postgres
-    env: docker
     plan: free
-    databases:
-      - name: keycloak
-        user: keycloak
+    databaseName: keycloak
+    databaseUser: keycloak
 
   # Keycloak Authentication Server
   - type: web
     name: delichops-keycloak
     env: docker
     dockerfilePath: ./Dockerfile.keycloak
-    dockerCommand: /opt/keycloak/bin/start-keycloak.sh
+    dockerCommand: /opt/keycloak/bin/kc.sh start --optimized
     plan: free
     envVars:
       - key: KC_DB
@@ -24,7 +22,13 @@ services:
           name: delichops-postgres
           property: connectionString
       - key: KC_DB_USERNAME
-        value: keycloak
+        fromDatabase:
+          name: delichops-postgres
+          property: user
+      - key: KC_DB_PASSWORD
+        fromDatabase:
+          name: delichops-postgres
+          property: password
       - key: KEYCLOAK_ADMIN
         value: admin
       - key: KEYCLOAK_ADMIN_PASSWORD
@@ -53,17 +57,9 @@ services:
           type: web
           property: host
       - key: KEYCLOAK_ISSUER_URI
-        fromService:
-          name: delichops-keycloak
-          type: web
-          property: host
-        value: /realms/delichops
+        sync: false  # Set manually: https://your-keycloak-url/realms/delichops
       - key: KEYCLOAK_JWK_SET_URI
-        fromService:
-          name: delichops-keycloak
-          type: web
-          property: host
-        value: /realms/delichops/protocol/openid-connect/certs
+        sync: false  # Set manually: https://your-keycloak-url/realms/delichops/protocol/openid-connect/certs
       - key: KEYCLOAK_REALM
         value: delichops
       - key: KEYCLOAK_CLIENT_ID
