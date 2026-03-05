@@ -15,7 +15,7 @@ services:
     envVars:
       - key: KC_DB
         value: postgres
-      - key: KC_DB_URL
+      - key: DATABASE_URL
         fromDatabase:
           name: delichops-postgres-akuq
           property: connectionString
@@ -41,7 +41,7 @@ services:
 
   # Delichops Backend (Single Monolithic Application)
   - type: web
-    name: delichops-backend
+    name: delichops-backend-akuq
     env: docker
     dockerfilePath: ./delichops-backend/Dockerfile
     dockerContext: ./delichops-backend
@@ -53,7 +53,7 @@ services:
         value: mongodb+srv://sales_book_db:jcjvfsDtGkwoM8z3@salesbook.nkan5iy.mongodb.net/delichops_db?retryWrites=true&w=majority
       - key: KEYCLOAK_SERVER_URL
         fromService:
-          name: delichops-keycloak
+          name: delichops-keycloak-akuq
           type: web
           property: host
       - key: KEYCLOAK_ISSUER_URI
