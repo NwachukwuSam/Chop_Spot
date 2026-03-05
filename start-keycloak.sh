@@ -1,2 +1,3 @@
 #!/bin/sh
-exec /opt/keycloak/bin/kc.sh start --optimized --http-port=${PORT:-8080} --hostname-strict=false --proxy=edge
+echo "Starting Keycloak with database: ${KC_DB_URL}"
+exec /opt/keycloak/bin/kc.sh start --optimized

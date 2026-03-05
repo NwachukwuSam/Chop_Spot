@@ -1,41 +1,42 @@
 # Simplified Render Blueprint - Monolithic Architecture
 databases:
   # PostgreSQL Database for Keycloak
-  - name: delichops-postgres
+  - name: delichops-postgres-akuq
     plan: free
     databaseName: keycloak
     user: keycloak
 
 services:
   - type: web
-    name: delichops-keycloak
+    name: delichops-keycloak-akuq
     env: docker
     dockerfilePath: ./Dockerfile.keycloak
-    dockerCommand: /opt/keycloak/bin/kc.sh start --optimized
     plan: free
     envVars:
       - key: KC_DB
         value: postgres
       - key: KC_DB_URL
         fromDatabase:
-          name: delichops-postgres
-          property: jdbcUrl
+          name: delichops-postgres-akuq
+          property: connectionString
       - key: KC_DB_USERNAME
         fromDatabase:
-          name: delichops-postgres
+          name: delichops-postgres-akuq
           property: user
       - key: KC_DB_PASSWORD
         fromDatabase:
-          name: delichops-postgres
+          name: delichops-postgres-akuq
           property: password
       - key: KEYCLOAK_ADMIN
         value: admin
       - key: KEYCLOAK_ADMIN_PASSWORD
         value: admin
       - key: KC_HOSTNAME_STRICT
-        value: false
+        value: "false"
       - key: KC_PROXY
         value: edge
+      - key: KC_HTTP_ENABLED
+        value: "true"
     healthCheckPath: /health/ready
 
   # Delichops Backend (Single Monolithic Application)
