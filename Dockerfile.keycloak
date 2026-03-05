@@ -7,4 +7,5 @@ COPY --chmod=755 start-keycloak.sh /opt/keycloak/bin/start-keycloak.sh
 RUN /opt/keycloak/bin/kc.sh build --db=postgres
 
 # Use the script as entrypoint
-ENTRYPOINT ["/opt/keycloak/bin/start-keycloak.sh"]
+ENTRYPOINT ["/bin/sh"]
+CMD ["/opt/keycloak/bin/start-keycloak.sh"]
