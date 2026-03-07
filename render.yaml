@@ -15,20 +15,18 @@ services:
     envVars:
       - key: KC_DB
         value: postgres
-      - key: KC_DB_URL_HOST
+      - key: POSTGRES_HOST
         fromDatabase:
           name: delichops-postgres-akuq
           property: host
-      - key: KC_DB_URL_PORT
+      - key: POSTGRES_PORT
         fromDatabase:
           name: delichops-postgres-akuq
           property: port
-      - key: KC_DB_URL_DATABASE
+      - key: POSTGRES_DATABASE
         fromDatabase:
           name: delichops-postgres-akuq
           property: database
-      - key: KC_DB_URL
-        value: jdbc:postgresql://${KC_DB_URL_HOST}:${KC_DB_URL_PORT}/${KC_DB_URL_DATABASE}
       - key: KC_DB_USERNAME
         fromDatabase:
           name: delichops-postgres-akuq
