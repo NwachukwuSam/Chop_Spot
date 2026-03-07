@@ -3,8 +3,6 @@ FROM quay.io/keycloak/keycloak:23.0
 # Build Keycloak with PostgreSQL support
 RUN /opt/keycloak/bin/kc.sh build --db=postgres
 
-# Copy startup script with executable permissions
-COPY --chmod=755 start-keycloak.sh /opt/keycloak/start-keycloak.sh
-
-# Start Keycloak using the startup script
-ENTRYPOINT ["/opt/keycloak/start-keycloak.sh"]
+# Start Keycloak
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
+CMD ["start", "--optimized"]
